@@ -2,10 +2,11 @@ package screen
 
 import data.CartItems
 
-class ShoppingCart {
+class ShoppingCart : Screen() {
     private val products = CartItems.products
 
     fun showCartItems() {
+        ScreenStack.push(this)
         if (products.isNotEmpty()) {
             println(
                 products.keys.joinToString(

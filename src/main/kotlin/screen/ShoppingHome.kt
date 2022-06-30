@@ -1,7 +1,7 @@
 package screen
 
 import LINE_DIVIDER
-import extension.getNotEmptyString
+import extensions.getNotEmptyString
 
 class ShoppingHome : Screen() {
 

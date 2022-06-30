@@ -1,6 +1,9 @@
 package screen
 
+import data.CartItems
 import data.Product
+import extension.getNotEmptyInt
+import extension.getNotEmptyString
 
 class ShoppingProductList {
     private val products = arrayOf(
@@ -25,14 +28,47 @@ class ShoppingProductList {
                 ***======================================***
                 선택하신 [$selectedCategory] 카테고리 상품입니다.
                 """.trimIndent())
+
             val productSize = categoryProducts.size
-            for(index in 0 until productSize){
-                println("${index}.${categoryProducts[index].name}")
+            for (index in 0 until productSize) {
+                println("${index}. ${categoryProducts[index].name}")
             }
+
+            categoryProducts.forEachIndexed{ index, product ->
+                println("${index}. ${product.name}")
+            }
+            showCartOption(categoryProducts, selectedCategory)
         } else {
-            showErrorMessage(selectedCategory)
+            showEmptyProductMessage(selectedCategory)
         }
     }
+
+    private fun showCartOption(categoryProduct: List<Product>, selectedCategory: String) {
+        println(
+            """
+                ***=======================================***
+                장바구니에 담을 상품 번호를 선택해주세요.
+                """.trimIndent()
+        )
+
+        val selectedIndex = readLine().getNotEmptyInt()
+        categoryProduct.getOrNull(selectedIndex)?.let{product ->
+            CartItems.addProduct(product)
+            println("=> 장바구니로 이동하시려면 #을, 계속 쇼핑하시려면 *을 입력해주세요")
+            val answer = readLine().getNotEmptyString()
+            if (answer == "#"){
+                val shoppingCart = ShoppingCart()
+                shoppingCart.showCartItems()
+            } else if (answer == "*") {
+                showProducts(selectedCategory)
+            }
+        }
+    }
+
+    private fun showEmptyProductMessage(selectedCategory: String) {
+        println("[$selectedCategory] 카테고리의 상품이 등록되기 전입니다.")
+    }
+
     private fun showErrorMessage(selectedCategory: String?) {
         println("[$selectedCategory] 카테고리의 상품이 등록 전입니다.")
     }
